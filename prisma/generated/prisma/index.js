@@ -170,6 +170,14 @@ const config = {
         "fromEnvVar": null,
         "value": "windows",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "windows"
+      },
+      {
+        "fromEnvVar": null,
+        "value": "rhel-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -196,8 +204,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"./generated/prisma\"\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nmodel User {\n  id         Int      @id @default(autoincrement())\n  username   String   @unique\n  email      String   @unique\n  password   String\n  avatar     String?\n  isVerified Boolean  @default(false)\n  createdAt  DateTime @default(now())\n  Blog       Blog[]\n}\n\nmodel Blog {\n  id        String       @id @default(uuid())\n  title     String       @unique\n  thumbnail String\n  category  CategoryBlog\n  content   String\n  userId    Int\n  createdAt DateTime     @default(now())\n  updatedAt DateTime     @updatedAt\n  user      User         @relation(fields: [userId], references: [id])\n}\n\nmodel EmailVerification {\n  id        Int      @id @default(autoincrement())\n  userId    Int\n  token     String\n  expiredAt DateTime\n  createdAt DateTime @default(now())\n}\n\nenum CategoryBlog {\n  SPORT\n  NEWS\n  FOOD\n  HEALTH\n}\n",
-  "inlineSchemaHash": "bf6fb3a0abd4b5e851c29b941fb5c6ba9743e51a32cda9d6db1b98de6e0704f3",
+  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  binaryTargets = [\"native\", \"windows\", \"rhel-openssl-3.0.x\"]\n  output        = \"./generated/prisma\"\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nmodel User {\n  id         Int      @id @default(autoincrement())\n  username   String   @unique\n  email      String   @unique\n  password   String\n  avatar     String?\n  isVerified Boolean  @default(false)\n  createdAt  DateTime @default(now())\n  Blog       Blog[]\n}\n\nmodel Blog {\n  id        String       @id @default(uuid())\n  title     String       @unique\n  thumbnail String\n  category  CategoryBlog\n  content   String\n  userId    Int\n  createdAt DateTime     @default(now())\n  updatedAt DateTime     @updatedAt\n  user      User         @relation(fields: [userId], references: [id])\n}\n\nmodel EmailVerification {\n  id        Int      @id @default(autoincrement())\n  userId    Int\n  token     String\n  expiredAt DateTime\n  createdAt DateTime @default(now())\n}\n\nenum CategoryBlog {\n  SPORT\n  NEWS\n  FOOD\n  HEALTH\n}\n",
+  "inlineSchemaHash": "0ff31c786d9ab313e6eabd123d30752f9eb3bbcc20e5bca944faf4890c032892",
   "copyEngine": true
 }
 
@@ -238,6 +246,10 @@ Object.assign(exports, Prisma)
 // file annotations for bundling tools to include these files
 path.join(__dirname, "query_engine-windows.dll.node");
 path.join(process.cwd(), "prisma/generated/prisma/query_engine-windows.dll.node")
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-rhel-openssl-3.0.x.so.node");
+path.join(process.cwd(), "prisma/generated/prisma/libquery_engine-rhel-openssl-3.0.x.so.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "prisma/generated/prisma/schema.prisma")
