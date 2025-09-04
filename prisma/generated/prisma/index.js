@@ -159,7 +159,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\USER\\OneDrive\\Desktop\\JCWDOL019\\BACK-END\\express-prisma\\prisma\\generated\\prisma",
+      "value": "C:\\Users\\USER\\OneDrive\\Desktop\\blog-api\\prisma\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -173,11 +173,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\USER\\OneDrive\\Desktop\\JCWDOL019\\BACK-END\\express-prisma\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\USER\\OneDrive\\Desktop\\blog-api\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../..",
@@ -187,11 +187,12 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://postgres.dwhytlbodgfbrnscmqnb:sEEpH1320$$@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+        "value": null
       }
     }
   },

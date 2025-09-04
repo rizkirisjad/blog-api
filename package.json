@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc && cp -rv ./src/templates ./dist",
+    "build": "prisma generate && tsc && cp -rv ./src/templates ./dist",
     "start": "tsc && node ./dist/index.js",
     "dev": "ts-node-dev ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
