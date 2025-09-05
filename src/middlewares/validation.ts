@@ -23,3 +23,28 @@ export const validateRegister = [
     next();
   },
 ];
+
+export const validateUpdateBlog = [
+  body("title")
+    .optional()
+    .isLength({ min: 3 })
+    .withMessage("Title must be at least 3 characters"),
+  body("category")
+    .optional()
+    .isLength({ min: 3 })
+    .withMessage("Category must be at least 3 characters"),
+  body("content")
+    .optional()
+    .isLength({ min: 10 })
+    .withMessage("Content must be at least 10 characters"),
+
+  (req: Request, res: Response, next: NextFunction) => {
+    const error = validationResult(req);
+
+    if (!error.isEmpty()) {
+      res.status(400).send({ errors: error.array() });
+      return;
+    }
+    next();
+  },
+];

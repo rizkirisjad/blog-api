@@ -111,5 +111,133 @@ class BlogController {
             }
         });
     }
+    updateBlog(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
+            try {
+                // // 1. Cek hasil validasi dari express-validator
+                // const errors = validationResult(req);
+                // if (!errors.isEmpty()) {
+                //   return res.status(400).send({ errors: errors.array() });
+                // }
+                const { id } = req.params;
+                const { title, category, content } = req.body;
+                // 2. Pastikan user login
+                const userId = (_b = (_a = res.locals) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b.id;
+                if (!userId) {
+                    res.status(401).send({ message: "Unauthorized" });
+                    return;
+                }
+                // 3. Cari blog
+                const blog = yield prisma_1.default.blog.findUnique({ where: { id } });
+                if (!blog) {
+                    res.status(404).send({ message: "Blog not found" });
+                    return;
+                }
+                // 4. Cek otorisasi → hanya author bisa update
+                if (blog.userId !== userId) {
+                    res.status(403).send({ message: "Forbidden" });
+                    return;
+                }
+                // 5. Default pakai thumbnail lama
+                let thumbnail = blog.thumbnail;
+                // 6. Jika ada file baru → update thumbnail lokal
+                if (req.file) {
+                    thumbnail = `http://localhost:8000/api/public/${req.file.filename}`;
+                }
+                // 7. Update blog
+                const updatedBlog = yield prisma_1.default.blog.update({
+                    where: { id },
+                    data: {
+                        title,
+                        category,
+                        content,
+                        thumbnail,
+                    },
+                });
+                res.status(200).send({
+                    message: "Blog updated",
+                    blog: updatedBlog,
+                });
+            }
+            catch (error) {
+                console.error(error);
+                res.status(500).send({ message: "Internal server error" });
+            }
+        });
+    }
+    updateBlogCloud(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
+            try {
+                const { id } = req.params;
+                const { title, category, content } = req.body;
+                const userId = (_b = (_a = res.locals) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b.id;
+                if (!userId) {
+                    res.status(401).send({ message: "Unauthorized" });
+                    return;
+                }
+                const blog = yield prisma_1.default.blog.findUnique({ where: { id } });
+                if (!blog) {
+                    res.status(404).send({ message: "Blog not found" });
+                    return;
+                }
+                if (blog.userId !== userId) {
+                    res.status(403).send({ message: "Forbidden" });
+                    return;
+                }
+                let thumbnail = blog.thumbnail;
+                if (req.file) {
+                    const cloud = yield (0, cloudinary_1.cloudinaryUpload)(req.file, "blog");
+                    thumbnail = cloud.secure_url;
+                }
+                const updatedBlog = yield prisma_1.default.blog.update({
+                    where: { id },
+                    data: {
+                        title,
+                        category,
+                        content,
+                        thumbnail,
+                    },
+                });
+                res.status(200).send({
+                    message: "Blog updated",
+                    blog: updatedBlog,
+                });
+            }
+            catch (error) {
+                console.error(error);
+                res.status(500).send({ message: "Internal server error" });
+            }
+        });
+    }
+    deleteBlog(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
+            try {
+                const { id } = req.params;
+                const userId = (_b = (_a = res.locals) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b.id;
+                if (!userId) {
+                    res.status(401).send({ message: "Unauthorized" });
+                    return;
+                }
+                const blog = yield prisma_1.default.blog.findUnique({ where: { id } });
+                if (!blog) {
+                    res.status(404).send({ message: "Blog not found" });
+                    return;
+                }
+                if (blog.userId !== userId) {
+                    res.status(403).send({ message: "Forbidden" });
+                    return;
+                }
+                yield prisma_1.default.blog.delete({ where: { id } });
+                res.status(200).send({ message: "Blog deleted" });
+            }
+            catch (error) {
+                console.error(error);
+                res.status(500).send({ message: "Internal server error" });
+            }
+        });
+    }
 }
 exports.BlogController = BlogController;

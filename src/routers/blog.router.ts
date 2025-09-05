@@ -2,6 +2,7 @@ import { Router } from "express";
 import { BlogController } from "../controllers/blog.controller";
 import { verifyToken } from "../middlewares/verify";
 import { uploader } from "../helpers/uploader";
+import { validateUpdateBlog } from "../middlewares/validation";
 
 export class BlogRouter {
   private router: Router;
@@ -14,13 +15,14 @@ export class BlogRouter {
   }
 
   private initializeRoutes() {
-    this.router.post(
-      "/",
-      uploader("diskStorage", "blog-").single("thumbnail"),
-      verifyToken,
-      this.blogController.createBlog
-    );
-    this.router.get("/", this.blogController.getBlogs);
+    this.router
+      .route("/")
+      .post(
+        uploader("diskStorage", "blog-").single("thumbnail"),
+        verifyToken,
+        this.blogController.createBlog
+      )
+      .get(this.blogController.getBlogs);
 
     this.router.post(
       "/cloud",
@@ -29,7 +31,24 @@ export class BlogRouter {
       this.blogController.createBlogCloud
     );
 
-    this.router.get("/:id", this.blogController.getBlogId);
+    this.router.patch(
+      "/cloud/:id",
+      uploader("memoryStorage", "blog-").single("thumbnail"),
+      verifyToken,
+      validateUpdateBlog,
+      this.blogController.updateBlogCloud
+    );
+
+    this.router
+      .route("/:id")
+      .get(this.blogController.getBlogId)
+      .patch(
+        uploader("diskStorage", "blog-").single("thumbnail"),
+        verifyToken,
+        validateUpdateBlog,
+        this.blogController.updateBlog
+      )
+      .delete(verifyToken, this.blogController.deleteBlog);
   }
 
   getRouter(): Router {
