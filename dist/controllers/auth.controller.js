@@ -46,13 +46,14 @@ class AuthController {
                         expiredAt,
                     },
                 });
+                const nextUrl = process.env.NEXT_URL || "http://localhost:3000";
                 const templatePath = path_1.default.join(__dirname, "../templates", "verify.hbs");
                 const templateSource = fs_1.default.readFileSync(templatePath, "utf-8");
                 const compiledTemplate = handlebars_1.default.compile(templateSource);
                 const html = compiledTemplate({
                     username: user.username,
                     email: user.email,
-                    link: `http://localhost:3000/verify/${token}`,
+                    link: `${nextUrl}/verify/${token}`,
                 });
                 yield mailer_1.transporter.sendMail({
                     from: process.env.GMAIL_USER,

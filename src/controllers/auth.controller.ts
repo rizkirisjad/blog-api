@@ -36,13 +36,14 @@ export class AuthController {
         },
       });
 
+      const nextUrl = process.env.NEXT_URL || "http://localhost:3000";
       const templatePath = path.join(__dirname, "../templates", "verify.hbs");
       const templateSource = fs.readFileSync(templatePath, "utf-8");
       const compiledTemplate = handlebars.compile(templateSource);
       const html = compiledTemplate({
         username: user.username,
         email: user.email,
-        link: `http://localhost:3000/verify/${token}`,
+        link: `${nextUrl}/verify/${token}`,
       });
 
       await transporter.sendMail({

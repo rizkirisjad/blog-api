@@ -70,23 +70,34 @@ export class BlogController {
 
   async getBlogId(req: Request, res: Response) {
     try {
-      const { id } = req.params;
+      const id = req.params.id; // atau Number(req.params.id) kalau pakai Int
+
       const blog = await prisma.blog.findUnique({
-        where: {
-          id,
-        },
+        where: { id },
         include: {
-          user: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              email: true,
+              avatar: true,
+            },
+          },
         },
       });
+
+      if (!blog) {
+        res.status(404).send({ message: `Blog with id ${id} not found` });
+        return;
+      }
 
       res.status(200).send({
         message: `Blog detail with id ${id}`,
         blog,
       });
     } catch (error) {
-      console.log(error);
-      res.status(400).send(error);
+      console.error(error);
+      res.status(500).send({ message: "Internal server error" });
     }
   }
 
